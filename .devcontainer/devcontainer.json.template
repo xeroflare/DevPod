@@ -1,0 +1,138 @@
+{
+	// =============================================================================
+	// VS Code Dev Container Configuration
+	// =============================================================================
+	// This configuration sets up a Python + PostgreSQL development environment
+	// with AI-assisted development. By default, we are going to use Claude AI
+	// =============================================================================
+
+	// Display name for this dev container configuration
+	"name": "DevPod",
+
+	// =============================================================================
+	// Container Configuration Options (Choose ONE)
+	// =============================================================================
+	
+	// OPTION 1: Docker Compose (CURRENT - Multi-service environments)
+	// Change this to match your specific docker-compose file as you need from ".devcontainer"
+	// Current alternatives: "ubuntu.docker-compose.yml", "python-pg.docker-compose.yml"
+	"dockerComposeFile": "ubuntu.docker-compose.yml",
+	// Main service name as defined in your docker-compose file
+	"service": "app",
+
+	// OPTION 2: Custom Dockerfile (Single container, custom build)
+	// Uncomment to use a custom Dockerfile instead of docker-compose
+	// "dockerFile": "arch-linux.Dockerfile",   // or "your-own-image.Dockerfile"
+	// "context": ".",
+
+	// OPTION 3: Public Docker Image (Fastest startup, pre-built images)
+	// Uncomment to use a public image directly (no custom builds)
+	// "image": "mcr.microsoft.com/devcontainers/python:3.11",              // Python environment
+	// "image": "mcr.microsoft.com/devcontainers/ubuntu:22.04",             // Ubuntu environment  
+	// "image": "mcr.microsoft.com/devcontainers/javascript-node:18",       // Node.js environment
+	// "image": "mcr.microsoft.com/devcontainers/java:17",                  // Java environment
+	// "image": "mcr.microsoft.com/devcontainers/go:1.20",                  // Go environment
+
+	// Container workspace path - where your project files will be mounted
+	"workspaceFolder": "/mnt/workspace",
+
+	// =============================================================================
+	// Port Forwarding Configuration
+	// =============================================================================
+	// Forward these ports from container to host for AI extension compatibility
+	"forwardPorts": [
+		// 11434,  // Continue/AI extension compatibility
+		// 1234    // LM Studio/AI compatibility
+		// 5272 // Microsoft AI Toolkit extension (uncomment if needed)
+		// 54112 // CodeGPT/AI extension (uncomment if needed)
+	],
+	"portsAttributes": {
+		"*": {
+			"autoForward": "silent"
+		}
+  	},
+
+	// =============================================================================
+	// VS Code Customizations
+	// =============================================================================
+	"customizations": {
+		"vscode": {
+			// Essential extensions for this development environment
+			"extensions": [
+				"anthropic.claude-code",                  // Claude Code for VSCode extension
+				"Google.geminicodeassist",                // Gemini for VSCode extension
+				"ms-python.python"                        // Python language support
+				// Optional extensions (uncomment as needed):
+				// "ms-ossdata.vscode-postgresql", // PostgreSQL database tools
+				// "ms-toolsai.jupyter"           // Jupyter notebook support
+			]
+			// Project-specific VS Code settings can be added here:
+			// "settings": {
+			//     "python.defaultInterpreterPath": "/usr/local/bin/python",
+			//     "python.formatting.provider": "black"
+			// }
+		}
+	},
+
+	// =============================================================================
+	// Container Lifecycle Commands
+	// =============================================================================
+	// These commands handle AI Code Assistant setup and permission management
+
+	// postCreateCommand: Runs INSIDE container after it's created
+	// Sets up container-side AI Code Assistant configuration
+	"remoteEnv": {
+		"PATH": "/tmp/npm/.npm-global/bin:${containerEnv:PATH}"
+	},
+	"onCreateCommand": {
+		"user-fix": "sudo chown -R user:user /home/user/",
+		"npm-fix": "mkdir -p /tmp/npm/.npm-global && sudo chown -R user:user /usr/local /tmp/npm/.npm-global && npm config set prefix /tmp/npm/.npm-global && export PATH=/tmp/npm/.npm-global/bin:$PATH"
+	},
+	"postCreateCommand": {
+		"npm-install-claude": "npm install -g @anthropic-ai/claude-code",
+		"npm-install-gemini": "npm install -g @google/gemini-cli"
+	},
+
+	// =============================================================================
+	// File System Mounts
+	// =============================================================================
+	// These bind mounts persist AI Code configuration between container rebuilds
+	"mounts": [
+		// Most AI Code Authentication & Configuration in `~/` = /home/user/
+		"source=devpod-home,target=/home/user/,type=volume",
+		// Maps local .ai/* files to container locations for seamless AI integration & custom commands \ agents
+		"source=${localWorkspaceFolder}/.ai/claude/,target=/home/user/.claude/,type=bind", // Claude AI - DevPod upstream (Recognized as User Level)
+		"source=${localWorkspaceFolder}/.ai/gemini/,target=/home/user/.gemini/,type=bind", // Gemini AI - DevPod upstream (Recognized as User Level)
+
+		"source=${localWorkspaceFolder}/workspace-ai/claude/,target=/mnt/workspace/.claude/,type=bind", // Claude AI - DevPod origin "Your Customization" (Recognized as Project Level)
+		"source=${localWorkspaceFolder}/workspace-ai/gemini/,target=/mnt/workspace/.gemini/,type=bind"  // Gemini AI - DevPod origin "Your Customization" (Recognized as Project Level)
+	],
+
+	// =============================================================================
+	// Container Features & Tools
+	// =============================================================================
+	"features": {
+		// Claude Code Integration
+		// Installs Anthropic's Claude Code CLI for AI-assisted development
+		// Documentation: https://github.com/anthropics/claude-code
+		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+
+		// Enhanced Shell Environment
+		// Provides a better development experience with modern shell tools
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,                    // Install Zsh shell
+			"configureZshAsDefaultShell": true,    // Set Zsh as default shell
+			"installOhMyZsh": true,                // Install Oh My Zsh framework
+			"installOhMyZshConfig": true,          // Configure Oh My Zsh
+			"upgradePackages": true,               // Update system packages
+			"username": "user",                    // Non-root user account
+			"userUid": "automatic",                // Auto-assign user ID
+			"userGid": "automatic"                 // Auto-assign group ID
+		}
+	}
+
+
+	// =============================================================================
+	// Usage Instructions: See .devcontainer/README.md
+	// =============================================================================
+}

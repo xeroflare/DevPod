@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/ubuntu.Dockerfile
+
+    volumes:
+      - ../workspace:/mnt/workspace/
+      - ../.ssh:/home/user/.ssh/
+
+    networks:
+      - default
+
+    command: sleep infinity

@@ -1,0 +1,63 @@
+# ============================================================================
+# USER WORKSPACE (Persistent, Private)
+# ============================================================================
+# The workspace directory is intended for:
+# - User project files
+# - Git submodules for external projects  
+# - Project-specific development files
+# Mount point only - workspace projects managed separately
+
+workspace/
+!workspace/.gitkeep
+
+# ============================================================================
+# AI ASSISTANT CONFIGURATION
+# ============================================================================
+.ai/claude/*
+!.ai/claude/.gitkeep
+!.ai/claude/agents
+!.ai/claude/commands
+!.ai/claude/mcp
+!.ai/claude/CLAUDE.md
+
+.ai/gemini/*
+!.ai/gemini/.gitkeep
+!.ai/gemini/GEMINI.md
+
+# ============================================================================
+# SSH KEYS & SECURITY (Always Private)
+# ============================================================================
+# SSH keys, known_hosts, and security configurations must never be tracked
+
+.ssh/*
+!.ssh/.gitkeep
+
+# ============================================================================
+# STANDARD IGNORES
+# ============================================================================
+# Common development and system files that should never be tracked
+
+!.gitkeep
+!.gitignore
+!.gitattributes
+!.editorconfig
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+env/
+*.env
+
+# Development tools
+.cache/
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
