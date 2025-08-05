@@ -86,6 +86,7 @@ DevPod integrates multiple AI coding assistants through a sophisticated mounting
 #### AI Extensions
 - **Claude Code** (`anthropic.claude-code`): Advanced AI pair programming
 - **Gemini Code Assist** (`Google.geminicodeassist`): Google's AI development assistant
+- **OpenCode AI**: Open-source AI development assistant (CLI only)
 
 #### AI Configuration Structure
 ```
@@ -106,19 +107,19 @@ workspace/                    # Your actual project repositories
 #### AI Bind Mount Strategy
 DevPod implements a two-level AI configuration system:
 
-1. **System-Wide Defaults** (Shipped upstream, recognized by AI as User-Level):
+1. **DevPod Defaults** (Shipped upstream, recognized by AI as User-Level):
    ```json
    "source=${localWorkspaceFolder}/.ai/claude/,target=/home/user/.claude/,type=bind"
    "source=${localWorkspaceFolder}/.ai/gemini/,target=/home/user/.gemini/,type=bind"
    ```
 
-2. **Workspace-Level Customizations** (Your environment settings, recognized by AI as Project-Level):
+2. **Workspace Customizations** (Your environment settings, recognized by AI as Project-Level):
    ```json
    "source=${localWorkspaceFolder}/workspace-ai/claude/,target=/mnt/workspace/.claude/,type=bind"
    "source=${localWorkspaceFolder}/workspace-ai/gemini/,target=/mnt/workspace/.gemini/,type=bind"
    ```
 
-> **Note**: Repository-level configs (like `.claude/` or `.gemini/` in individual repos) are outside DevPod's mount system but can be recognized by AI assistants when invoked from within specific repository directories.
+> **Note**: The `workspace-ai/` directories are for user customizations and are mapped into the workspace via devcontainer setup. Users can configure these directories as needed. DevPod provides the devcontainer as .template with preconfigured mappings for Claude and Gemini at the workspace level (Project-Level). See `.ai/README.md` for detailed configuration guidance.
 
 ### Persistence Strategy
 
@@ -247,9 +248,22 @@ The `devcontainer.json.template` provides a comprehensive setup with:
 
 ### AI Integration Setup
 1. Ensure `.ai/claude/` and `.ai/gemini/` directories exist (provided by upstream)
-2. Configure AI assistants according to their documentation
+2. Authenticate AI assistants after container starts:
+   ```bash
+   # Authentication
+   claude auth
+   gemini auth
+   opencode auth login
+   ```
 3. Use `workspace-ai/` for workspace-level customizations
 4. Create repo-specific configs in `workspace/your-repo/.claude/` or `workspace/your-repo/.gemini/` as needed
+
+```bash
+# Advanced: Skip permissions (safe in sandboxed DevContainer environment)
+claude --dangerously-skip-permissions
+gemini --yolo
+```
+> **DevContainer Isolation**: Commands with "dangerous" flags are safe within DevPod's containerized environment as they only affect the isolated development container, not your host system.
 
 ### Custom Environment Creation
 1. Create custom configuration files in `.devcontainer/custom/`
@@ -268,11 +282,11 @@ The `devcontainer.json.template` provides a comprehensive setup with:
 - **Keep containers lightweight** by avoiding unnecessary packages
 
 ### AI Integration
-- **Three-level configuration hierarchy**: System defaults (`.ai/`), workspace customizations (`workspace-ai/`), and repo-specific configs (`workspace/repo/.ai/`)
+- **Two-level configuration hierarchy**: DevPod defaults (`.ai/`) recognized as User-Level, and workspace customizations (`workspace-ai/`) recognized as Project-Level
 - **Use gitignore patterns** to keep AI credentials secure
 - **Test AI functionality** after container rebuilds
 - **Document workspace-specific AI configurations** in workspace-ai directories
-- **Keep repo-level configs** minimal and project-specific
+- **Repository-level configs** (outside DevPod scope) can exist in individual project directories but depend on AI assistant working directory context
 
 ### Data Persistence
 - **Use bind mounts** for development files that need host access
@@ -375,11 +389,10 @@ DevPod/
 │   └── gemini/                             # Gemini AI workspace settings
 ├── .ssh/                                   # SSH keys (gitignored, persistent)
 ├── workspace/                              # User projects (gitignored, persistent)
-├── README.md                               # Project documentation
-└── git.md                                  # Common git commands & SSH key management guide
+└── README.md                               # Project documentation
 ```
 
 This two-level architecture ensures:
-- **System defaults** are maintained via upstream updates
-- **Workspace customizations** persist across container rebuilds
-- **Seamless environment** with proper configuration hierarchy recognition
+- **DevPod defaults** are maintained via upstream updates
+- **Workspace customizations** persist across container rebuilds and are fully user-managed
+- **Seamless environment** with proper configuration hierarchy recognition by AI assistants

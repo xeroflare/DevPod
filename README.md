@@ -1,7 +1,7 @@
 # DevPod
-> AI-Powered Development Environment for Every Workflow
+> Containerized Development Environment for Every Workflow
 
-An AI-powered development environment that integrates multiple AI assistants within isolated containers. Keep your host system safe with only 3 required apps: **VS Code**, **Git**, and **Docker/Podman**.
+A versatile development environment that can integrate multiple AI assistants within isolated containers, or work perfectly as a standalone DevContainer workspace. Keep your host system safe with only 3 required apps: **VS Code**, **Git**, and **Docker/Podman**.
 
 ## 🎯 **Quick Decision: Choose Your Workflow**
 
@@ -53,7 +53,8 @@ code .
 **✅ Benefits:**
 - Instant setup, no configuration persistence needed
 - Perfect isolation from host system  
-- Full AI assistance with Claude Code and Gemini Code Assist
+- Full AI assistance with Claude Code, Gemini Code Assist, and OpenCode AI
+- Works great as a standalone DevContainer environment
 
 **🎯 Use Cases:**
 - Testing new frameworks or libraries
@@ -94,6 +95,7 @@ code . # → Reopen in Container → claude auth
 - Teammates get identical setup
 - Easy to reproduce and share
 - AI configuration persists with workspace-ai customization
+- Perfect as a standalone DevContainer workspace
 
 **🎯 Use Cases:**
 - Personal project development
@@ -225,8 +227,34 @@ workspace-ai/               # Your customizations (user-managed, create as neede
 
 ### Supported AI Assistants
 - **Claude Code**: Anthropic's Claude with VS Code integration
-- **Gemini Code Assist**: Google's Gemini with VS Code integration
+- **Gemini Code Assist**: Google's Gemini with VS Code integration  
+- **OpenCode AI**: Open-source AI assistant for development
 - **Extensible**: Easy to add more AI assistants
+
+### AI Assistant Setup Commands
+After container starts, authenticate your AI assistants:
+
+```bash
+# Standard authentication (recommended)
+claude auth
+gemini auth  
+opencode auth login
+```
+
+### Containerized AI Permissions
+In DevPod's safe container environment, you can grant AI assistants full permissions to operate without interruption:
+
+```bash
+# These commands allow AI to operate without asking permission for each action
+# Safe because they only affect the isolated container, not your host system
+
+claude auth --dangerously-skip-permissions  # Claude's term, but safe in container
+gemini --yolo                               # Gemini's automatic action acceptance
+```
+
+> **🛡️ DevContainer Safety**: DevPod operates in an isolated container environment where advanced commands with "dangerous" flags are completely safe. These commands only affect the containerized development workspace, never your host system. The container isolation ensures all experimental configurations, permission bypasses, and advanced features remain sandboxed within the development environment.
+>
+> **Perfect for DevPod**: The containerized workspace is designed for this type of unrestricted development, making AI assistance seamless while maintaining complete host system protection.
 
 ### Best Practices
 - **Create workspace-ai directories as needed**: `mkdir -p workspace-ai/claude workspace-ai/gemini`
@@ -305,17 +333,29 @@ Choose your development environment in `devcontainer.json`:
 - [ ] **Docker Desktop** or **Podman** installed and running
 - [ ] **VS Code** with [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 - [ ] **Git** configured with your identity
-- [ ] **AI Assistant Account** (optional - DevPod works without AI too)
+- [ ] **AI Assistant Account** (optional - DevPod works perfectly as a standalone DevContainer)
   - **Claude Code** (recommended): Sign up at [claude.ai](https://claude.ai)
   - **Gemini Code Assist**: Available through Google's platform
-  - Both AI assistants are supported and can be used simultaneously 
+  - **OpenCode AI**: Open-source alternative
+  - DevPod can be used as a version-controlled DevContainer workspace without any AI assistants 
 
 ### First Time Setup
 - [ ] Choose your workflow (Disposable, Single Project, or Multi-Project)
 - [ ] Clone/fork the repository
 - [ ] Copy and configure `devcontainer.json`
 - [ ] Open in VS Code and rebuild container
-- [ ] Authenticate AI assistant: `claude auth` or `gemini auth` (if using AI)
+- [ ] **Authenticate AI assistants** (optional - skip if using DevPod without AI):
+  ```bash
+  # Standard authentication
+  claude auth
+  gemini auth
+  opencode auth login
+  
+  # Safe containerized permissions: AI can operate without asking permission
+  # Claude calls this "dangerously skip permissions"
+  claude --dangerously-skip-permissions
+  gemini --yolo
+  ```
 - [ ] Test basic functionality
 
 ### Verification
@@ -350,11 +390,11 @@ Choose your development environment in `devcontainer.json`:
 
 ## 🎉 **Welcome to DevPod!**
 
-You're now ready to experience AI-powered development in a safe, isolated environment. Whether you're prototyping quickly, developing long-term projects, or managing complex multi-project portfolios, DevPod adapts to your workflow.
+You're now ready to experience containerized development in a safe, isolated environment. Whether you're prototyping quickly, developing long-term projects, or managing complex multi-project portfolios, DevPod adapts to your workflow with or without AI assistance.
 
 **Need help?** Check the documentation files or create an issue for support.
 
-**Ready to start?** Pick your workflow above and begin coding with AI assistance! 🚀
+**Ready to start?** Pick your workflow above and begin coding in your isolated development environment! 🚀
 
 ---
 
