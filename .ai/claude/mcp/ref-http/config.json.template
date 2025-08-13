@@ -1,0 +1,4 @@
+{
+  "type": "http",
+  "url": "https://api.ref.tools/mcp?apiKey=REF_API_KEY" // Add your actual API Key (REF_API_KEY)
+}

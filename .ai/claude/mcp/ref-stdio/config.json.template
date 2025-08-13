@@ -1,0 +1,11 @@
+{
+  "type": "stdio",
+  "command": "npx",
+  "args": [
+    "-y",
+    "ref-tools-mcp@latest"
+  ],
+  "env": {
+    "REF_API_KEY": "REF_API_KEY" // Add your actual API Key (REF_API_KEY)
+  }
+}

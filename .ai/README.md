@@ -131,7 +131,34 @@ echo "Workspace-specific context and preferences" > workspace-ai/gemini/GEMINI.m
 ]
 ```
 
-### 3. CLI Tools Installation
+### 3. MCP (Model Context Protocol) Setup
+
+DevPod ships with MCP server templates as `.template` files. Copy and remove `.template` extension to use:
+
+```bash
+# Copy MCP templates to activate them (example)
+cp ~/.claude/mcp/context7/config.json.template ~/.claude/mcp/context7/config.json
+
+# Use DevPod alias to reload MCP servers with config.json files
+reload-dp-claude-mcp
+```
+
+#### Manual MCP Reload Command
+
+```bash
+# Reload only MCP servers that have config.json files (preserves other custom MCPs)
+for dir in ~/.claude/mcp/*/; do
+  [ -d "$dir" ] && [ -f "$dir/config.json" ] && {
+    claude mcp remove "$(basename "$dir")" -s user 2>/dev/null
+    claude mcp add-json "$(basename "$dir")" "$(cat "$dir/config.json")" -s user
+  }
+done 2>/dev/null
+claude mcp list
+```
+
+> **Note**: This only reloads MCPs that have `config.json` files, preserving any custom MCP servers you may have configured outside the DevPod framework.
+
+### 4. CLI Tools Installation
 
 AI CLI tools are automatically installed via postCreateCommand hooks:
 ```json

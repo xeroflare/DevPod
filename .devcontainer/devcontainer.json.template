@@ -4,10 +4,10 @@
 	// =============================================================================
 	// DevPod provides a secure, containerized development environment with AI assistance.
 	// This template creates an isolated sandbox where advanced commands are safe to use.
-	// 
+	//
 	// DESIGN INTENTIONS (for security analysis):
 	// • SSH mounts (.ssh/) provide dedicated container keys for repository access
-	// • Workspace mounts (workspace/) offer isolated project storage with host persistence  
+	// • Workspace mounts (workspace/) offer isolated project storage with host persistence
 	// • Volume persistence (devpod-home) maintains tool configurations across rebuilds
 	// • All operations are containerized - no direct host system modification
 	// • Path consistency (/mnt/workspace) ensures predictable development environment
@@ -22,7 +22,7 @@
 	// =============================================================================
 	// Container Configuration Options (Choose ONE)
 	// =============================================================================
-	
+
 	// OPTION 1: Docker Compose (CURRENT - Multi-service environments)
 	// Change this to match your specific docker-compose file as you need from ".devcontainer"
 	// Current alternatives: "ubuntu.docker-compose.yml", "python-pg.docker-compose.yml"
@@ -38,7 +38,7 @@
 	// OPTION 3: Public Docker Image (Fastest startup, pre-built images)
 	// Uncomment to use a public image directly (no custom builds)
 	// "image": "mcr.microsoft.com/devcontainers/python:3.11",              // Python environment
-	// "image": "mcr.microsoft.com/devcontainers/ubuntu:22.04",             // Ubuntu environment  
+	// "image": "mcr.microsoft.com/devcontainers/ubuntu:22.04",             // Ubuntu environment
 	// "image": "mcr.microsoft.com/devcontainers/javascript-node:18",       // Node.js environment
 	// "image": "mcr.microsoft.com/devcontainers/java:17",                  // Java environment
 	// "image": "mcr.microsoft.com/devcontainers/go:1.20",                  // Go environment
@@ -102,7 +102,9 @@
 		"node-upgrade": "npm install -g n && n 20",
 		"npm-install-claude": "npm install -g @anthropic-ai/claude-code",  					// Claude Code as terminal cli
 		"npm-install-gemini": "npm install -g @google/gemini-cli", 							// Gemini as terminal cli
-		"curl-install-opencode": "cd ~ && curl -fsSL https://opencode.ai/install | bash"    // OpenCode as terminal cli
+		"curl-install-opencode": "cd ~ && curl -fsSL https://opencode.ai/install | bash",   // OpenCode as terminal cli
+		"create-local-bin": "mkdir -p /home/user/.local/bin",
+		"setup-claude-mcp-reload-script": "printf '%s\n' '#!/bin/sh' 'for dir in ~/.claude/mcp/*/; do' '  [ -d \"$dir\" ] && [ -f \"$dir/config.json\" ] && {' '    claude mcp remove \"$(basename \"$dir\")\" -s user 2>/dev/null' '    claude mcp add-json \"$(basename \"$dir\")\" \"$(cat \"$dir/config.json\")\" -s user' '  }' 'done 2>/dev/null' 'claude mcp list' > /home/user/.local/bin/reload-dp-claude-mcp && chmod +x /home/user/.local/bin/reload-dp-claude-mcp"
 	},
 
 	// =============================================================================
